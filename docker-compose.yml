@@ -1,0 +1,55 @@
+services:
+    mysql-bpex:
+        image: 'mysql/mysql-server:8.0'
+        container_name: mysql-bpex
+        ports:
+            - '3400:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - 'mysql:/var/lib/mysql'
+        networks:
+            - bpex
+
+    phpmyadmin-bpex:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin-bpex
+        depends_on:
+            - mysql-bpex
+        environment:
+            PMA_HOST: 'mysql-bpex'
+            PMA_USER: root
+            PMA_PASSWORD: '${DB_ROOT_PASSWORD}'
+        ports:
+            - "127.0.0.1:8123:80"
+        networks:
+            - bpex
+
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: app-bpex
+        ports:
+            - '8080:80'
+        depends_on:
+            - mysql-bpex
+        environment:
+            DB_HOST: mysql-bpex
+            DB_DATABASE: '${DB_DATABASE}'
+            DB_USERNAME: '${DB_USERNAME}'
+            DB_PASSWORD: '${DB_PASSWORD}'
+        networks:
+            - bpex
+networks:
+  bpex:
+    driver: bridge
+
+volumes:
+    mysql:
+      driver: local
