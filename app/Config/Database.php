@@ -24,31 +24,8 @@ class Database extends Config
      *
      * @var array<string, mixed>
      */
-    public array $default = [
-        'DSN'          => '',
-        'hostname'     => 'localhost',
-        'username'     => '',
-        'password'     => '',
-        'database'     => '',
-        'DBDriver'     => 'MySQLi',
-        'DBPrefix'     => '',
-        'pConnect'     => false,
-        'DBDebug'      => true,
-        'charset'      => 'utf8mb4',
-        'DBCollat'     => 'utf8mb4_general_ci',
-        'swapPre'      => '',
-        'encrypt'      => false,
-        'compress'     => false,
-        'strictOn'     => false,
-        'failover'     => [],
-        'port'         => 3306,
-        'numberNative' => false,
-        'dateFormat'   => [
-            'date'     => 'Y-m-d',
-            'datetime' => 'Y-m-d H:i:s',
-            'time'     => 'H:i:s',
-        ],
-    ];
+    public $default;
+
 
     //    /**
     //     * Sample database connection for SQLite3.
@@ -197,5 +174,31 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+
+        $this->default = [
+            'DSN'          => '',
+            'hostname'     => env('DB_HOST','127.0.0.1'),
+            'username'     => env('DB_USERNAME','root'),
+            'password'     => env('DB_PASSWORD',''),
+            'database'     => env('DB_DATABASE','test'),
+            'DBDriver'     => 'MySQLi',
+            'DBPrefix'     => '',
+            'pConnect'     => false,
+            'DBDebug'      => true,
+            'charset'      => 'utf8mb4',
+            'DBCollat'     => 'utf8mb4_general_ci',
+            'swapPre'      => '',
+            'encrypt'      => false,
+            'compress'     => false,
+            'strictOn'     => false,
+            'failover'     => [],
+            'port'         => (int) env('DB_PORT',3306),
+            'numberNative' => false,
+            'dateFormat'   => [
+                'date'     => 'Y-m-d',
+                'datetime' => 'Y-m-d H:i:s',
+                'time'     => 'H:i:s',
+            ],
+        ];
     }
 }
